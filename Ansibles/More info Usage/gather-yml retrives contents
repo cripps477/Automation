@@ -1,0 +1,4 @@
+Gather and retrieve commands cleans the output, send commands to multiple cisco devices and display the output.
+
+command is below
+ansible-playbook gather.yml | sed 's/\\n/\n/g' (cleans the output so that commands are human readable)

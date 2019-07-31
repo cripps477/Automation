@@ -1,0 +1,3 @@
+int vlan 456
+no shut 
+

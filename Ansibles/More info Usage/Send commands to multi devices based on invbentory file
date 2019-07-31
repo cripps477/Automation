@@ -1,0 +1,1 @@
+ansible -i Inventory.ini cisco_sw -m ping (pings all devices within the inventory file)

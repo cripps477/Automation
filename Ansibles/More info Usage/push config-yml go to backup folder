@@ -1,0 +1,3 @@
+push_yml file to push config go the above backup directory
+To create a template go to the templates folder and the template save in the location specified in the push.yml file (the source portion)
+this will deploy the template to multiple devices.

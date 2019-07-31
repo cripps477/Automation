@@ -1,0 +1,33 @@
+tree command to show the file structure
+The inventory file lists the 
+
+[group name]
+ip address
+
+[group:children]
+the group and the other groups nested groups
+
+At the top of the directory there will be a site.yml file, this will include the roles, keep the structure
+the all.yml if included will be tried by default
+the site.yml will reference the roles, in the case of these the role is the router role.
+within the role there will be tasks, the task to be performed named main.yml
+within the role there will be templates, this will house the router.j2 (jinja template) where the template will be created
+within the role folder there will be vars this will include varible these are defined as below:
+
+
+---
+ - router
+   host: r1
+   loopback: 1.1.1.1 255.255.255.0
+   gig0ip: 192.168.110.250 255.255.255.0
+
+
+The jinja file will have something like:
+
+{{item.gig0ip}}
+
+item being a iterator, the gig0ip being the gig0ip
+This isn't deployed to any router rather instead the template is created the location is sepcified within the tasks file.
+
+
+   

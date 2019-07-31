@@ -1,0 +1,11 @@
+---
+- name: Save Configurations (IOS)
+  hosts: CSR-Routers
+
+  tasks:
+    - ios_command:
+        commands: show ip int brief 
+      register: show ip int brief
+
+    - debug:
+        msg: "{{ show ip int brief }}"

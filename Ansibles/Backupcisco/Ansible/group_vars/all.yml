@@ -1,0 +1,24 @@
+---
+#Default Connectivity variables 
+
+ansible_user: "philip"
+ansible_ssh_pass: "password"
+ansible_network_os: "ios"
+ansible_connection: "network_cli"
+
+# Classic Provider Details for use with aireos
+
+legacy_credentials:
+  host: "{{ ansible_host }}"
+  username: "philip"
+  password: "password"
+
+
+
+
+
+
+  
+
+
+

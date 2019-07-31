@@ -1,0 +1,11 @@
+!
+hostname {{item.hostname}}
+!
+interface loopback 0
+description loopback
+ip address {{item.loopback}}
+!
+interface gigabitethernet0/3
+description gigabit
+ip address {{item.gig03ip}}
+

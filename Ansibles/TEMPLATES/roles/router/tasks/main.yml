@@ -1,0 +1,4 @@
+---
+- name: Generate Configuration Files
+  template: src=router.j2 dest="/home/ubuntu/network-programmability/CONFIGS/{{item.hostname}}.txt"
+  with_items: "{{ routers }}"

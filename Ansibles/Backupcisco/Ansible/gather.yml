@@ -1,0 +1,13 @@
+---
+- name: show Configurations (IOS)
+  hosts: CSR-Routers
+
+  tasks:
+  - name: run show version on remote devices
+    ios_command:
+      commands: show ip int brief
+    register: output
+
+  - name: show output
+    debug:
+      var: output.stdout
