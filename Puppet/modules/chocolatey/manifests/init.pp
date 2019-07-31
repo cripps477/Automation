@@ -1,0 +1,3 @@
+class chocolatey {
+include chocolatey
+}

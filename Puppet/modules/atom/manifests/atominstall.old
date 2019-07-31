@@ -1,0 +1,10 @@
+include chocolatey
+package { 'Atom':
+	ensure => 'latest',
+	provider => 'chocolatey',
+        }
+include chocolatey
+package { 'vlc':
+        ensure => 'latest',
+	provider => 'chocolatey',
+}
