@@ -1,0 +1,234 @@
+$vms=import-csv "E:\vmcreation.csv"
+foreach ($vm in $vms) {
+#Varibles Drawn from CSV file & iterated through line by line#
+#VMNAME contains the vm csv column with the name#
+
+$VMNAME = $vm.VMNAME
+$mem = $vm.Memory
+$switch =  $vm.Switch
+$vmpath = $vm.Path
+$gen = $vm.Generation
+$OS = $vm.OS
+$app = $vm.app
+$app2 = $vm.app2
+$app3 = $vm.app3
+$app4 = $vm.app4
+$app5 = $vm.app5
+$app6 = $vm.app6
+$app7 = $vm.app7
+$app8 = $vm.app8
+$vlan = $vm.vlan
+$ip = $vm.ip
+
+
+#Create Template via SCVMM#
+
+$VMTemplate = Get-SCVMTemplate -VMMServer "svr-vmm-01.mip.local" | where {$_.Name -like "*$OS*"}
+$VMHost = Get-SCVMHost -ComputerName "dev-nd-01.mip.local"
+$VMhost2 = Get-SCVMHost -ComputerName "dev-nd-02.mip.local"
+New-SCVirtualMachine -VMTemplate $VMTemplate -Name $VMNAME -VMHost $VMHost -Path $vmpath -RunAsynchronously -ComputerName $VMNAME}
+
+#If the job is not running then change the NIC and configure the CPU and Memory#
+$jobrunning = get-scjob -Running
+do {
+Write-Host "looping"
+$jobrunning = get-scjob -Running
+if (!$jobrunning) {
+write-host "var is null"
+$vms2 = import-csv "E:\vmcreation.csv"
+foreach ($vm2 in $vms2) {
+$VMNAME2 = $vm2.VMNAME
+$Cpu2 = $vm2.Cpu
+$mem2 = $vm2.Memory
+$VMM = Get-SCVirtualMachine -Name $VMNAME2
+$Adapter = Get-SCVirtualNetworkAdapter -VM "$VMNAME2" | where-object {$_.PhysicalAddress -like "*00:15:5D*"}
+write-host "hello"
+Get-SCVirtualMachine -Name "$VMNAME2" | Stop-SCVirtualMachine
+start-sleep 120
+Set-SCVirtualNetworkAdapter -VirtualNetworkAdapter $Adapter -VirtualNetwork "DevSwitch" -MACAddressType "static" -PhysicalAddress "00:00:00:00:00:00"
+start-sleep 120
+Get-SCVirtualMachine -Name "$VMNAME2" | Stop-SCVirtualMachine -Force
+start-sleep 120
+set-scvirtualmachine -VM "$VMM" -Name "$VMNAME2" -CPUCount $Cpu2 -MemoryMB $mem2 -DynamicMemoryEnabled $false
+start-sleep 120
+Get-SCVirtualMachine -Name "$VMNAME2" | Start-SCVirtualMachine
+start-sleep 120
+$finished2 = "true"
+}}} while ($jobrunning)
+
+#If jobrunning is not $null then start block of code#
+#Once the above code is completed the $finished varible will be available start the below:#
+if (!$jobrunning -and $finished2) {
+$vms3 =import-csv "E:\vmcreation.csv"
+foreach ($vm3 in $vms3) {
+$drives2 = $vm3.drives
+$VLAN = $vm3.vlan
+$OS2 = $vm3.OS
+$drives2 = [System.Decimal]::Parse($drives2)
+$VMNAME3 = $vm3.VMNAME
+$Movecomp = Get-ADComputer $VMNAME3
+#Move the computer to the Devs OU, the Devs OU contains a GPO to format the volume & Install Software#
+if ($OS2 -eq 2016){
+Move-ADObject  $Movecomp -TargetPath "OU=Server 2016,OU=Dev,OU=MI Servers,OU=The MI Partnership,DC=mip,DC=local"
+}
+if ($OS2 -eq 2012){
+Move-ADObject  $Movecomp -TargetPath "OU=Server 2012,OU=Dev,OU=MI Servers,OU=The MI Partnership,DC=mip,DC=local"
+}
+if ($OS2 -eq 10){
+Move-ADObject  $Movecomp -TargetPath "OU=Windows 10,OU=Dev,OU=MI Servers,OU=The MI Partnership,DC=mip,DC=local"
+}
+##Gets the ID 411 of the VM#
+$VirtualNetworkAdapter = Get-SCVirtualMachine -VMMServer "svr-vmm-01" -name "$VMNAME3" | Get-SCVirtualNetworkAdapter
+## Get the ID of the Logical Switch##
+$VMNetwork = Get-SCVMNetwork -VMMServer localhost -Name "DEVSwitch" -ID "e32eb4f5-3f7c-404b-83f0-e2f24fd30c6c"
+##use the above to set the virtual machine##
+Set-SCVirtualNetworkAdapter -VirtualNetworkAdapter $VirtualNetworkAdapter -VMNetwork $VMNetwork -VLanEnabled $true -VLanID $VLAN -VirtualNetwork "DevSwitch" -IPv4AddressType Dynamic -IPv6AddressType Dynamic -NoPortClassification
+$drivesizearray=@($vm3.drivesize2,$vm3.drivesize3,$vm3.drivesize4,$vm3.drivesize5,$vm3.drivesize6,$vm3.drivesize7,$vm3.drivesize8,$vm3.drivesize9,$vm3.drivesize10,$vm3.drivesize11,$vm3.drivesize12,$vm3.drivesize13);
+#Array contains incompatible characters 'GB' these are all removed for the purpose of disk allocation#
+$arrayreplacement = $drivesizearray -replace "[GB]"
+#int64 change the type of string to something that is compatible with the powershell command#
+[int64]$disk1 = $arrayreplacement[0]
+[int64]$disk2 = $arrayreplacement[1]
+[int64]$disk3 = $arrayreplacement[2]
+[int64]$disk4 = $arrayreplacement[3]
+[int64]$disk5 = $arrayreplacement[4]
+[int64]$disk6 = $arrayreplacement[5]
+[int64]$disk7 = $arrayreplacement[6]
+[int64]$disk8 = $arrayreplacement[7]
+[int64]$disk9 = $arrayreplacement[8]
+[int64]$disk10 = $arrayreplacement[9]
+[int64]$disk11 = $arrayreplacement[10]
+[int64]$disk12 = $arrayreplacement[11]
+$disk1 = $disk1 * 1000000000
+$disk2 = $disk2 * 1000000000
+$disk3 = $disk3 * 1000000000
+$disk4 = $disk4 * 1000000000
+$disk5 = $disk5 * 1000000000
+$disk6 = $disk6 * 1000000000
+$disk7 = $disk7 * 1000000000
+$disk8 = $disk8 * 1000000000
+$disk9 = $disk9 * 1000000000
+$disk10 = $disk10 * 1000000000
+$disk11 = $disk11 * 1000000000
+$disk12 = $disk12 * 1000000000
+#Above is the Math to convert GB to bytes for powershell compatibility#
+$cluster = 'dev-clus-01'
+$volume1 = 'Cluster Disk 1'
+$volume2 = 'Cluster Disk 2'
+$volume3 = 'Cluster Disk 3'
+Import-Module failoverclusters
+$devvolume1 = Get-ClusterSharedVolume -Name $volume1 -Cluster $cluster | select -Expand SharedVolumeInfo | select @{n='FreeSpace';e={($_.Partition.Size - $_.Partition.UsedSpace)/1MB}}
+$devvolume2 = Get-ClusterSharedVolume -Name $volume2 -Cluster $cluster | select -Expand SharedVolumeInfo | select @{n='FreeSpace';e={($_.Partition.Size - $_.Partition.UsedSpace)/1MB}}
+$devvolume3 = Get-ClusterSharedVolume -Name $volume3 -Cluster $cluster | select -Expand SharedVolumeInfo | select @{n='FreeSpace';e={($_.Partition.Size - $_.Partition.UsedSpace)/1MB}}
+$devvolume1free = $devvolume1.FreeSpace
+$devvolume2free = $devvolume2.FreeSpace
+$devvolume3free = $devvolume3.FreeSpace
+$maxfreevol = ($devvolume1free,$devvolume2free,$devvolume3free |Measure-Object -Maximum).Maximum
+if ($maxfreevol -eq $devvolume1free) {$volume = "volume1"}
+if ($maxfreevol -eq $devvolume2free) {$volume = "volume2"}
+if ($maxfreevol -eq $devvolume3free) {$volume = "volume3"}
+#From import-failover clusters the shared volumes are retrieves a function (measure-object) is called to find the greatest value vms are placed here#
+write-host $drives2
+write-host $VMNAME3
+$Reboot = Get-SCVirtualMachine -Name "$VMNAME3"
+#VM rebooted for Powershell compatibility#
+#The below code, if drives eq 1 then iterate to the next line if not continue#
+#Drives decrement until 1 is true the max drives supported are 12 easily maximise this by increasing the lines and adding csv columns#
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+#VM rebooted for Powershell compatibility#
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk1
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk2
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk3
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk4
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk5
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk6
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk7
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk8
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk9
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk10
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk11
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+if($drives2 -eq 1){
+start-sleep 60
+Reset-SCVirtualMachine -VM $Reboot
+Continue;}
+new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $size12
+add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+$drives2--
+write-host "$drives2"
+}}

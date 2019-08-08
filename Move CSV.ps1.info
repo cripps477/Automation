@@ -1,0 +1,5 @@
+set-location E:\backup
+$backupPath=new-item -type directory $(get-date -f MM-dd-yyyy_HH_mm_ss) 
+copy-item E:\vmcreation.csv -destination $backuppath -recurse
+start-sleep 120
+remove-item E:\vmcreation.csv

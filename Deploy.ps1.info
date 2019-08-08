@@ -1,0 +1,15 @@
+﻿$FileTrue = Get-Item -path "C:\windows\system32\installer.txt"
+if (!$FileTrue) {
+new-item -path "C:\windows\system32\installer.txt" -ItemType File
+Get-Disk | Where-Object {$_.PartitionStyle -eq 'RAW'} | Initialize-Disk -PartitionStyle MBR -PassThru | New-Partition -AssignDriveLetter -UseMaximumSize | Format-Volume -FileSystem NTFS -Confirm:$false
+start-process "msiexec.exe" -wait -NoNewWindow -ArgumentList "/i \\svr-vmm-01\Deployment\Firefox-65.0-en-GB.msi /qb /norestart"
+start-process "msiexec.exe" -wait -NoNewWindow -ArgumentList "/i \\svr-vmm-01\Deployment\Notepad++.msi /qn"
+} 
+else {
+EXIT
+}
+
+
+
+
+

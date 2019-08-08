@@ -1,0 +1,4 @@
+VMNAME,Memory,Switch,Path,Generation,OS,app,app1,app2,app3,app4,app5,app6,app7,app8,drives,size,vlan,ip,drivesize2,drivesize3,drivesize4,drivesize5,drivesize6,drivesize7,drivesize8,drivesize9,drivesize10,drivesize11,drivesize12,drivesize13,Cpu
+NEWTESTDCCSV998,2048,devswitch,c:\clusterstorage\volume1,2,2016,sql,office,devapp1,devapp2,devapp3,devapp4,devapp5,devapp6,devapp7,3,127GB,105,192.168.3.190,256GB,30GB,,,,,,,,,,,2
+NEWTESTDCCSV999,1800,devswitch,c:\clusterstorage\volume1,3,2016,sql,office,devapp1,devapp2,devapp3,devapp4,devapp5,devapp6,devapp7,4,127GB,105,192.168.3.190,256GB,30GB,5GB,,,,,,,,,,2
+
