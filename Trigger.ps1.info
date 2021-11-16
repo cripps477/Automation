@@ -23,9 +23,9 @@ $ip = $vm.ip
 
 #Create Template via SCVMM#
 
-$VMTemplate = Get-SCVMTemplate -VMMServer "svr-vmm-01.mip.local" | where {$_.Name -like "*$OS*"}
-$VMHost = Get-SCVMHost -ComputerName "dev-nd-01.mip.local"
-$VMhost2 = Get-SCVMHost -ComputerName "dev-nd-02.mip.local"
+$VMTemplate = Get-SCVMTemplate -VMMServer "svr-vmm-01.fake.local" | where {$_.Name -like "*$OS*"}
+$VMHost = Get-SCVMHost -ComputerName "dev-nd-01.fake.local"
+$VMhost2 = Get-SCVMHost -ComputerName "dev-nd-02.fake.local"
 New-SCVirtualMachine -VMTemplate $VMTemplate -Name $VMNAME -VMHost $VMHost -Path $vmpath -RunAsynchronously -ComputerName $VMNAME}
 
 #If the job is not running then change the NIC and configure the CPU and Memory#
@@ -69,13 +69,13 @@ $VMNAME3 = $vm3.VMNAME
 $Movecomp = Get-ADComputer $VMNAME3
 #Move the computer to the Devs OU, the Devs OU contains a GPO to format the volume & Install Software#
 if ($OS2 -eq 2016){
-Move-ADObject  $Movecomp -TargetPath "OU=Server 2016,OU=Dev,OU=MI Servers,OU=The MI Partnership,DC=mip,DC=local"
+Move-ADObject  $Movecomp -TargetPath "OU=Server 2016,OU=Dev,OU=MI Servers,OU=The fake fake,DC=fake,DC=local"
 }
 if ($OS2 -eq 2012){
-Move-ADObject  $Movecomp -TargetPath "OU=Server 2012,OU=Dev,OU=MI Servers,OU=The MI Partnership,DC=mip,DC=local"
+Move-ADObject  $Movecomp -TargetPath "OU=Server 2012,OU=Dev,OU=MI Servers,OU=The fake fake,DC=fake,DC=local"
 }
 if ($OS2 -eq 10){
-Move-ADObject  $Movecomp -TargetPath "OU=Windows 10,OU=Dev,OU=MI Servers,OU=The MI Partnership,DC=mip,DC=local"
+Move-ADObject  $Movecomp -TargetPath "OU=Windows 10,OU=Dev,OU=MI Servers,OU=The fake fake,DC=fake,DC=local"
 }
 ##Gets the ID 411 of the VM#
 $VirtualNetworkAdapter = Get-SCVirtualMachine -VMMServer "svr-vmm-01" -name "$VMNAME3" | Get-SCVirtualNetworkAdapter
@@ -139,96 +139,96 @@ start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 #VM rebooted for Powershell compatibility#
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk1
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk1
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk2
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk2
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk3
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk3
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk4
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk4
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk5
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk5
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk6
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk6
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk7
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk7
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk8
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk8
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk9
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk9
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk10
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk10
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk11
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $disk11
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 if($drives2 -eq 1){
 start-sleep 60
 Reset-SCVirtualMachine -VM $Reboot
 Continue;}
-new-vhd -ComputerName "dev-nd-01.mip.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $size12
-add-vmharddiskdrive -computername "dev-nd-01.mip.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
+new-vhd -ComputerName "dev-nd-01.fake.local" -path "C:\clusterstorage\$volume\$VMNAME3$drives2.vhdx" -SizeBytes $size12
+add-vmharddiskdrive -computername "dev-nd-01.fake.local" -VMName $VMNAME3 -Path "C:\clusterstorage\volume3\$VMNAME3$drives2.vhdx"
 $drives2--
 write-host "$drives2"
 }}
